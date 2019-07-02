@@ -12,7 +12,7 @@ Picking a wine based on its label seems to be a common occurrence when picking a
 
 
 ## The Data
-I collected the data by webscaping the search pages of [wine.com](https://www.wine.com/list/wine/7155). On these pages I was able to get an image of the wine label, the varietal, the origin, various ratings, the type of the wine, and the price.
+I collected the data by webscaping the search pages of [wine.com](https://www.wine.com/list/wine/7155). On these pages I was able to get an image of the wine label, the varietal, the origin, various ratings, the type of wine, and the price.
 
 The wine scraping script ran on an EC2 instance on AWS and all of the wine labels were collected and then stored on an S3 bucket. The script collected image labels and metadata for about 14,600 wines.
 
@@ -46,6 +46,8 @@ I was using 50x50 pixel images, so I had 7500 features plus metadate about each 
 
 ## Predicting Price
 For predicting the price I tried both Linear Regression and Random Forest models. Overall, the preformance of these models wasn't great, the highest r-squared value being around 0.48 and the root mean squared error approximately $45. Interestingly the Linear Regression model out performed the Random Forest model.
+
+I used a combination of principal components, type, features about the origin and (simplified into the top few and 'other' categories). Interestingly, the model performed best when it had all of the origin features by country, not combined into an 'other' category. The models also used the KMeans cluster assignment in its prediction.
 
 ## Conclusion
 Its difficult to predict the price of wine using only the label and an a few features about the wine. So in summary, if you have access to a wine sommolier, continue to use that resource for all your wine purchasing guidance because the label will sometime mislead you! 
