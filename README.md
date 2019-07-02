@@ -3,7 +3,7 @@
 ## Have you ever picked a wine based on its label?
 Picking a wine based on its label seems to be a common occurrence when picking a bottle, and it got me thinking - how does the look of the label impact the price of the wine? Does it?
 
-![blank labels](/figures/wine-labels.jpg)
+<img src="/figures/figures/wine-labels.jpg" width="900">
 
 <sup>*Image from The Daily Meal in [Psychology of a Wine Label: Why We Buy Bottles We Do](https://www.thedailymeal.com/psychology-wine-label-why-we-buy-bottles-we-do)*</sup>
 
@@ -19,8 +19,8 @@ The wine scraping script ran on an EC2 instance on AWS and all of the wine label
 ## Image Clusters using KMeans Clustering
 One of the first things I did after collecting the data was an unsupervised model to see if there was a way to cluster to wine labels based on image alone. I used KMeans to cluster the images into four clusters, and found that each cluster had a distinctive color pallete and style.
 
-![cluster0](/figures/no_padding_cluster0.jpg)![cluster1](/figures/no_padding_cluster1.jpg)
-![cluster1](/figures/no_padding_cluster2.jpg)![cluster1](/figures/no_padding_cluster3.jpg)
+<img src="/figures/no_padding_cluster0.jpg" width="600"><img src="/figures/no_padding_cluster1.jpg" width="600">
+<img src="/figures/no_padding_cluster2.jpg" width="600"><img src="/figures/no_padding_cluster3.jpg" width="600">
 
 ## The Other Metadata
 Some of the other metadata that I had to explore included reviews, price, origin, varietal, type, and other booleans such as giftable, collectible, green, screwcap, and boutique.
@@ -28,7 +28,7 @@ Some of the other metadata that I had to explore included reviews, price, origin
 ### Origin
 The origin data had hundreds of distinct values to start since each wine region can be a small geographic area in a country or state. I first consolidated the data to countries and states, but that still left over 25 distinct values. I took a few of the top producing countries/states and looked at their price distribution in a boxplot to get a sense of the distribution of price in those regions. This was later used when modeling price.
 
-mg src="/figures/price_by_origin.jpg" width="900">
+<img src="/figures/price_by_region.jpg" width="600">
 
 ### Varietal
 There were 98 varietals of wine represented in the dataset, but most of these varietals only had a handful of records. Again, I took a few of the top varietals and looked at their price distribution.
@@ -41,7 +41,7 @@ Wine.com provides a number of different wine review ratings as well as customer 
 ## Principal Component Analysis
 I was using 50x50 pixel images, so I had 7500 features plus metadate about each wine, so I had to do something to reduce the number of dimensions. I used Principal Component Analysis to reduce the number of features for my image data that I used to feed into my price prediction models. Below is the scree plot which shows that over 50% of the variance can be explain by just the first few principal components.
 
-<img src="/figures/pca_scree_plot.jpg" width="900">
+<img src="/figures/pca_scree_plot.jpg" width="600">
 
 ## Predicting Price
 For predicting the price I tried both Linear Regression and Random Forest models. Overall, the preformance of these models wasn't great, the highest r-squared value being around 0.48 and the root mean squared error approximately $45. Interestingly the Linear Regression model out performed the Random Forest model.
@@ -50,7 +50,7 @@ I used a combination of principal components, type, features about the origin an
 
 I found that the KMeans cluster assignment was not very helpful in predicting price. The distributions of each cluster were very similiar.
 
-<img src="/figures/price_by_cluster.jpg" width="900">
+<img src="/figures/price_by_cluster.jpg" width="600">
 
 ## Conclusion
 Its difficult to predict the price of wine using only the label and an a few features about the wine. So in summary, if you have access to a wine sommolier, continue to use that resource for all your wine purchasing guidance because the label will sometime mislead you! 
