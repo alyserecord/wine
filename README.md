@@ -3,10 +3,12 @@
 ## Have you ever picked a wine based on its label?
 ![blank labels](/figures/wine-labels.jpg)
 
-*Image from The Daily Meal in [Psychology of a Wine Label: Why We Buy Bottles We Do](https://www.thedailymeal.com/psychology-wine-label-why-we-buy-bottles-we-do)*
-“Picking a wine by its label is slightly better than judging a book by its cover.” *(Alex Burch, as cited in The Takeout in [How to judge a bottle of wine by its label](https://thetakeout.com/how-to-judge-a-bottle-of-wine-by-its-label-1828030852))*
-
 Picking a wine based on its label seems to be a common occurrence when picking a bottle, and it got me thinking - how does the look of the label impact the price of the wine? Does it?
+
+*Image from The Daily Meal in [Psychology of a Wine Label: Why We Buy Bottles We Do](https://www.thedailymeal.com/psychology-wine-label-why-we-buy-bottles-we-do)*
+
+**“Picking a wine by its label is slightly better than judging a book by its cover.”** *(Alex Burch, as cited in The Takeout in [How to judge a bottle of wine by its label](https://thetakeout.com/how-to-judge-a-bottle-of-wine-by-its-label-1828030852))*
+
 
 ## The Data
 I collected the data by webscaping the search pages of [wine.com](https://www.wine.com/list/wine/7155). On these pages I was able to get an image of the wine label, the varietal, the origin, various ratings, the type of the wine, and the price.
@@ -42,7 +44,7 @@ I was using 50x50 pixel images, so I had 7500 features plus metadate about each 
 <img src="/figures/pca_scree_plot.jpg" width="900">
 
 ## Predicting Price
-For predicting the price I tried both Linear Regression and Random Forest Models. Overall, the preformance of these models wasn't great, the highest r-squared value being around 0.48 and the 
+For predicting the price I tried both Linear Regression and Random Forest models. Overall, the preformance of these models wasn't great, the highest r-squared value being around 0.48 and the root mean squared error approximately $45. Interestingly the Linear Regression model out performed the Random Forest model.
 
 ## Conclusion
 Its difficult to predict the price of wine using only the label and an a few features about the wine. So in summary, if you have access to a wine sommolier, continue to use that resource for all your wine purchasing guidance because the label will sometime mislead you! 
