@@ -19,8 +19,8 @@ The wine scraping script ran on an EC2 instance on AWS and all of the wine label
 ## Image Clusters using KMeans Clustering
 One of the first things I did after collecting the data was an unsupervised model to see if there was a way to cluster to wine labels based on image alone. I used KMeans to cluster the images into four clusters, and found that each cluster had a distinctive color palette and style.
 
-<img src="/figures/no_padding_cluster0.jpg" width="700"><img src="/figures/no_padding_cluster1.jpg" width="700">
-<img src="/figures/no_padding_cluster2.jpg" width="700"><img src="/figures/no_padding_cluster3.jpg" width="700">
+<img src="/figures/no_padding_cluster0.jpg" width="600"><img src="/figures/no_padding_cluster1.jpg" width="600">
+<img src="/figures/no_padding_cluster2.jpg" width="600"><img src="/figures/no_padding_cluster3.jpg" width="600">
 
 ## The Metadata
 Some of the other metadata that I had to explore included reviews, price, origin, varietal, type, and other booleans such as giftable, collectible, green, screwcap, and boutique.
