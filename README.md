@@ -44,11 +44,11 @@ I was using 50x50 pixel images, so I had 7500 features plus metadate about each 
 <img src="/figures/pca_scree_plot.jpg" width="600">
 
 ## Predicting Price
-For predicting the price I tried both Linear Regression and Random Forest models. Overall, the performance of these models wasn't great, the highest r-squared value being around 0.48 and the root mean squared error approximately $45. Interestingly the Linear Regression model out performed the Random Forest model.
+For predicting the price I tried both Linear Regression and Random Forest models. Overall, the performance of these models wasn't great, the highest r-squared value being around 0.49 with a Random Forest model. The the root mean squared error was approximately $45, indicating that the predicted values were not very close to the actual. I removed the top and botton 10% of the data to remove the outliers, and while the r-squared value did not improve, the root mean squared error came down to about $17.
 
-I used a combination of principal components, type, features about the origin and (simplified into the top few and 'other' categories). Interestingly, the model performed best when it had all of the origin features by country, not combined into an 'other' category. The models also used the KMeans cluster assignment in its prediction.
+In the models I used a combination of principal components and combinations of my metadata. I simplified origin and varietal into the top few categories and one 'other' category to reduce the number of features as seen above in the boxplots. Interestingly, the models performed best when they had all of the origin features by country, not combined into an 'other' category. 
 
-I found that the KMeans cluster assignment was not very helpful in predicting price. The distributions of each cluster were very similar.
+The models also used the KMeans cluster assignment in its prediction, but I found that the KMeans cluster assignment was not very helpful in predicting price. The distributions of each cluster were very similar.
 
 <img src="/figures/price_by_cluster.jpg" width="600">
 
@@ -57,5 +57,6 @@ Its difficult to predict the price of wine using only the label and an a few fea
 
 ## Future Work
 I found the analysis on the wine labels themselves (PCA and KMeans) to be very insteresting, so I would like to take this project in a different direction in the future to build a recommender model based on wine labels. I often find that I am drawn to labels that I recognize or look familiar in some way, so I think a recommender system would be interesting on this dataset.
+
 Also, I am in the process of scraping additional information about the 14,600 wines, specifically the Winemarker Notes which 
 could be used for NLP.
