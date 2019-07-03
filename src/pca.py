@@ -56,7 +56,7 @@ def scree_plot(pca):
                    ha="center", 
                    fontsize=14)
     ax.set_xlabel("Principal Component", fontsize=24)
-    ax.set_ylabel("Variance Explained (%)", fontsize=24)
+    ax.set_ylabel("Variance Explained", fontsize=24)
     ax.set_title('Scree Plot for Principal Components', fontsize=28)
     plt.savefig('../figures/pca_scree_plot.jpg')
 
