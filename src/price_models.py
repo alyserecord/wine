@@ -41,7 +41,7 @@ def sklearn_linear_regression(X_train,y_train,X_test,y_test):
     print('Linear Regression rmse: {}'.format(np.sqrt(mean_squared_error(y_test,y_pred))))
 
 def random_forest(X_train,y_train,X_test,y_test):
-    model = RandomForestRegressor(n_estimators=200,max_depth=25)
+    model = RandomForestRegressor(n_estimators=200,max_depth=10)
     model.fit(X_train,y_train)
     y_pred = model.predict(X_test)
     print('Random Forest rsquared: {}'.format(model.score(X_test,y_test)))
@@ -51,21 +51,22 @@ if __name__ == '__main__':
     df = pd.read_csv('../data/50x50/sorted_df.csv')
     col_list = ['url','avg_rating',
         'page','rating_dict','price_bins','name',
-        'pc7','pc6','pc5','pc4']
+        'pc7','pc6','pc5']
     df = drop_unneeded_columns(df,col_list)
 
 
-    origins_to_fill = ['France','Italy','California']
-    origin_simplification(df,origins_to_fill)
+    # origins_to_fill = ['France','Italy','California']
+    # origin_simplification(df,origins_to_fill)
     varietals_to_fill = ['Pinot Noir','Chardonnay',
       'Cabernet Sauvignon','Bordeaux Red Blends',
-      'Other Red Blends','Sauvignon Blanc']
+      'Other Red Blends','Sauvignon Blanc']    
+    # varietals_to_fill = ['Bordeaux Red Blends']
     varietal_simplification(df,varietals_to_fill)
     
     cols = ['origin','varietal']
     df = get_dummies(df,cols)
 
-    y = df.pop('price')
+    y = np.log(df.pop('price'))
     X_train, X_test, y_train, y_test = train_test_split(df, y)
 
     sm_linear_regression(X_train,y_train)

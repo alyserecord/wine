@@ -64,6 +64,6 @@ if __name__ == '__main__':
     X = np.load('../data/50x50/image_array_no_padding.npy')
     pca, principal_components = create_pca(X,10)
     price = np.load('../data/50x50/sorted_price.npy')
-    plot_pca(principal_components,price)
-    scree_plot(pca)
+    # plot_pca(principal_components,price)
+    # scree_plot(pca)
     add_pcs_to_df(pca,'../data/50x50/sorted_df.csv',7)

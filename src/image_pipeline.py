@@ -84,6 +84,7 @@ def merge_and_sort(image_array_filepath,filename_array_filepath,df_filepath,pixe
 
 def drop_outliers(df):
     df = df[df['price']<500]
+    # df = df[df['price']>13.99]
     # df = df[df['price']>10]
     return df
 
