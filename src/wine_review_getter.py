@@ -45,16 +45,16 @@ def scraper(wine_list):
     for i in wine_list:
         URL = '{}{}'.format('https://www.wine.com',i)
         try:
-		r = requests.get(URL)
-        	soup = BeautifulSoup(r.content, 'html5lib')
-        	try:
-           		wine = get_all_text(soup,i)
-            		f = csv.writer(open('../data/wine_descriptions.csv', 'a'))
-            		f.writerow(wine)
-        	except:
-            		pass
-	except:
-		pass
+            r = requests.get(URL)
+            soup = BeautifulSoup(r.content, 'html5lib')
+            try:
+                wine = get_all_text(soup,i)
+                f = csv.writer(open('../data/wine_descriptions3.csv', 'a'))
+                f.writerow(wine)
+            except:
+            	pass
+        except:
+            pass
         # time.sleep(10)
 
 
