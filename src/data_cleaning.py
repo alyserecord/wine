@@ -91,12 +91,18 @@ class WineCleaner():
         df['price_bins'] = pd.cut(df['price'],bins,labels=names)
         return df
 
+    def merge_descriptions(self,df,desc_df):
+        desc_df = desc_df[['name','description']]
+        merged = pd.merge(df,desc_df,how='left',left_on='name',right_on='name',left_index=True)
+        return merged
+
     def save_df(self,df,filepath):
         df.to_csv(filepath)
 
 
 if __name__ =='__main__':
     df = pd.read_csv('../data/scraped_wine_data.csv')
+    desc_df = pd.read_csv('../data/wine_descriptions.csv')
     
     wine = WineCleaner()
     bucket = 'winelabelimages'
@@ -111,5 +117,6 @@ if __name__ =='__main__':
     col = 'origin'
     str_lst = ['California','France','Italy','Oregon','South Africa','Spain','Australia','Washington','Japan','Austria','Greece','Portugal','Chile','Argentina','New Zealand','Uruguay','Other U.S.','Germany','Hungary','Canada','Israel','England','Croatia','Lebanon','Slovenia','Macedonia','China']
     new_df = wine.string_replace(new_df,col,str_lst)
+    new_df = wine.merge_descriptions(new_df,desc_df)
     wine.save_df(new_df,'../data/cleaned_data.csv')
     

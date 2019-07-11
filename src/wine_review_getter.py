@@ -40,7 +40,7 @@ def get_all_text(soup,i):
 
 
 def scraper(wine_list):
-    f = csv.writer(open('wine_descriptions.csv', 'w'))
+    f = csv.writer(open('../data/wine_descriptions2.csv', 'w'))
     f.writerow(['url','name', 'size','alcohol', 'description','reviews'])
     for i in wine_list:
         URL = '{}{}'.format('https://www.wine.com',i)
@@ -48,16 +48,16 @@ def scraper(wine_list):
         soup = BeautifulSoup(r.content, 'html5lib')
         try:
             wine = get_all_text(soup,i)
-            f = csv.writer(open('wine_descriptions.csv', 'a'))
+            f = csv.writer(open('../data/wine_descriptions2.csv', 'a'))
             f.writerow(wine)
         except:
             pass
-        time.sleep(10)
+        # time.sleep(10)
 
 
 
 if __name__ == '__main__':
     df = pd.read_csv('../data/scraped_wine_data.csv')
-    # urls = ['/product/chateau-clerc-milon-15-liter-magnum-2005/434799','/product/royal-tokaji-late-harvest-500ml-2016/414521','/product/vietti-barolo-rocche-5-liter-2015/525412']
-    urls = df['url'][1:].tolist()
+    urls = ['/product/chateau-clerc-milon-15-liter-magnum-2005/434799','/product/royal-tokaji-late-harvest-500ml-2016/414521','/product/vietti-barolo-rocche-5-liter-2015/525412']
+    # urls = df['url'][1:].tolist()
     scraper(urls)
