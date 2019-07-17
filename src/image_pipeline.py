@@ -13,27 +13,51 @@ warnings.filterwarnings('ignore')
 
 
 def retrieve_images(s3_keys,bucket):
+    '''
+    Given a list of S3 keys and bucket name, retrieves all of the files
+    and saves in an images directory.
+
+    Input: 
+    Array of S3 Bucket Keys
+    Bucket Name
+    '''
     s3_keys = ['{}.jpg'.format(x) for x in s3_keys]
     for i in s3_keys:
         print(i)
         s3.meta.client.download_file(bucket,i,'../images/{}'.format(i))
 
 
-def resize_images(filepath,pixel_1,pixel_2,colors):
-    images = np.zeros((len(os.listdir(filepath)),(pixel_1 * pixel_2 * colors)))
+def resize_images(filepath,pixel_1,pixel_2,colors,saved_filename,flatten=True):
+    '''
+    Resizes image in a directory and saves a numpy array of the resized
+    image and a numpy array of the file names.
+
+    Inputs:
+    filepath: directory filepath for the desired images
+    pixel_1 x pixel_2 x colors: Desired image size
+    saved_filename: name to append to the name and pixel numpy arrays
+    flatten: if true the image array will be flattened (default), if false the image array will retain shape
+    '''
+    if flatten == True:
+        images = np.zeros((len(os.listdir(filepath)),(pixel_1 * pixel_2 * colors)))
+    else:
+        images = np.zeros((len(os.listdir(filepath)), pixel_1, pixel_2,colors))
     file_names = []
 
     for idx,fname in enumerate(os.listdir(filepath)):
         image = io.imread(os.path.join(filepath,fname))
         image_resized = resize(image,(pixel_1,pixel_2,colors),mode='constant')
-        images[idx] = image_resized.ravel()
+        if flatten == True:
+            images[idx] = image_resized.ravel()
+        else:
+            images[idx] = image_resized
         file_names.append(fname[:-4])
 
         # plt.imshow(image_resized)
         # plt.show()
-    np.save('../data/{}x{}/image_array_no_padding'.format(pixel_1,pixel_2),images)
+    np.save('../data/{}x{}/image_array_{}'.format(pixel_1,pixel_2,saved_filename),images)
     file_names = np.array(file_names)
-    np.save('../data/{}x{}/file_array_no_padding'.format(pixel_1,pixel_2),file_names)
+    np.save('../data/{}x{}/file_array_{}'.format(pixel_1,pixel_2,saved_filename),file_names)
 
 def resize_images_with_padding(filepath,pixel_1,pixel_2,colors):
     images = np.zeros((len(os.listdir(filepath)),(pixel_1 * pixel_2 * colors)))
@@ -63,6 +87,11 @@ def resize_images_with_padding(filepath,pixel_1,pixel_2,colors):
 
 
 def merge_and_sort(image_array_filepath,filename_array_filepath,df_filepath,pixel_1,pixel_2,colors):
+    '''
+    Takes in arrays filepaths for images pixels, filenames, and a dataframe. Merges the three datasets so
+    so that the image can be acessed by name and the df and images can be used in models together. 
+    Resaves the image pixels after sorting, creates a price bins array, and resaves the sorted dataframe.
+    '''
     images = pd.DataFrame(np.load(image_array_filepath))
     filename = pd.DataFrame(np.load(filename_array_filepath))
     cols = ['wine']
@@ -72,12 +101,13 @@ def merge_and_sort(image_array_filepath,filename_array_filepath,df_filepath,pixe
     merged = pd.merge(image_df,df,how='inner',left_on='wine',right_on='name')
     merged = drop_outliers(merged)
     
+    #re-save the image array after merging all files to ensure image pixels are in correct order
     pixel_cols = pixel_1 * pixel_2 * colors
     onlyimages = merged.iloc[:,:pixel_cols]
-    
     np.save(image_array_filepath,onlyimages.values)
+    # save an array price bins only for PCA analysis
     np.save('../data/{}x{}/sorted_price'.format(pixel_1,pixel_2),merged['price_bins'].values)
-    
+    # save a new copy of the dataframe that is sorted according to the image pixel array
     cols_to_skip = pixel_1*pixel_2*colors + 2
     subset= merged.iloc[:,cols_to_skip:]
     subset.to_csv('../data/{}x{}/sorted_df.csv'.format(pixel_1,pixel_2),index=False)
@@ -101,4 +131,5 @@ if __name__ == '__main__':
     colors = 3
     # resize_images(filepath,pixel_1,pixel_2,colors)
     # resize_images_with_padding(filepath,pixel_1,pixel_2,colors)
-    merge_and_sort('../data/50x50/image_array_no_padding.npy','../data/50x50/file_array_no_padding.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors)
+    resize_images(filepath,pixel_1,pixel_2,colors,'cnn',flatten=False)
+    # merge_and_sort('../data/50x50/image_array_no_padding.npy','../data/50x50/file_array_no_padding.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors)

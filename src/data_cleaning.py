@@ -94,6 +94,8 @@ class WineCleaner():
     def merge_descriptions(self,df,desc_df):
         desc_df = desc_df[['name','description']]
         merged = pd.merge(df,desc_df,how='left',left_on='name',right_on='name',left_index=True)
+        merged = merged[merged['description'] != ' View More']
+        merged = merged[merged['description'].isnull()]
         return merged
 
     def save_df(self,df,filepath):
