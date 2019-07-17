@@ -49,7 +49,7 @@ def scraper(wine_list):
             soup = BeautifulSoup(r.content, 'html5lib')
             try:
                 wine = get_all_text(soup,i)
-                f = csv.writer(open('../data/wine_descriptions3.csv', 'a'))
+                f = csv.writer(open('../data/wine_descriptions.csv', 'a'))
                 f.writerow(wine)
             except:
             	pass
