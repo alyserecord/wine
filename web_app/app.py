@@ -21,7 +21,7 @@ def search_results():
         df = pd.read_csv('../data/50x50/sorted_df.csv')
         selected = df[(df['origin']==selected_origin) & (df['varietal']==selected_varietal) & (df['price_bins']==selected_price)]
         try:
-            subset = selected.sample(10)
+            subset = selected.sample(12)
         except:
             subset = selected
         if subset.shape[0] > 0:

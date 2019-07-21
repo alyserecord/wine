@@ -9,7 +9,6 @@ class WineCleaner():
 
     def __init__(self):
         self.labels = []
-        # self.cleaned_df = pd.DataFrame
     
     def get_image_names(self,bucket):
         '''
@@ -27,6 +26,16 @@ class WineCleaner():
         return self.labels 
 
     def drop_bad_data(self,df):
+        '''
+        Drops duplicate record, drops bad data without origin or containing '/'
+
+        Input:
+        Dataframe of wine data
+
+        Output:
+        Dataframe without invalid records
+
+        '''
         df.drop_duplicates(subset='name',keep='first',inplace=True)
         df.drop(df.head(1).index,inplace=True)
         df.drop(df.tail(1).index,inplace=True)
@@ -35,6 +44,17 @@ class WineCleaner():
         return df
  
     def drop_records_missing_image(self,df):
+        '''
+        Takes a dataframe of wine data and looks to see if there is an image on 
+        S3 for each record, dropping the records that do not have an image.
+
+        Input:
+        Dataframe of wine data
+
+        Output:
+        Dataframe only records that have an image in S3
+
+        '''
         df['in_s3'] = 0
         for idx,row in enumerate(df['name']):
             if row in self.labels:
@@ -54,6 +74,15 @@ class WineCleaner():
         return df
 
     def remove_non_wine(self,df):
+        '''
+        Removes the non wine data from the wine dataframe.
+
+        Input:
+        Dataframe of wine data
+
+        Output:
+        Dataframe of wine data with non-wine data removed
+        '''
         mask = df['varietal'].isin(['Stemware & Decanters','In Box Glassware', 'Serve & Preserve', 'Mixed Collections', 'Corkscrews', 'In Box Accessory', 'Entertaining', 'Wine Chillers', 'Wine Storage'])
         df = new_df[~mask]
         return df
@@ -95,7 +124,7 @@ class WineCleaner():
         desc_df = desc_df[['name','description']]
         merged = pd.merge(df,desc_df,how='left',left_on='name',right_on='name',left_index=True)
         merged = merged[merged['description'] != ' View More']
-        merged = merged[merged['description'].isnull()]
+        merged = merged[~merged['description'].isnull()]
         return merged
 
     def save_df(self,df,filepath):
@@ -117,8 +146,11 @@ if __name__ =='__main__':
     # s3_keys = wine.get_keys(new_df)
     new_df = wine.bin_prices(new_df)
     col = 'origin'
-    str_lst = ['California','France','Italy','Oregon','South Africa','Spain','Australia','Washington','Japan','Austria','Greece','Portugal','Chile','Argentina','New Zealand','Uruguay','Other U.S.','Germany','Hungary','Canada','Israel','England','Croatia','Lebanon','Slovenia','Macedonia','China']
+    str_lst = ['California','France','Italy','Oregon','South Africa',
+    'Spain','Australia','Washington','Japan','Austria','Greece',
+    'Portugal','Chile','Argentina','New Zealand','Uruguay',
+    'Other U.S.','Germany','Hungary','Canada','Israel','England',
+    'Croatia','Lebanon','Slovenia','Macedonia','China']
     new_df = wine.string_replace(new_df,col,str_lst)
     new_df = wine.merge_descriptions(new_df,desc_df)
     wine.save_df(new_df,'../data/cleaned_data.csv')
-    
