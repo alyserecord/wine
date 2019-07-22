@@ -31,8 +31,8 @@ def show_cluster(fname,labels,n_clusters):
         plt.savefig('../figures/no_padding_cluster{}.jpg'.format(cluster))
 
 if __name__ == '__main__':
-    X = np.load('../data/50x50/image_array_no_padding.npy')
-    fname = np.load('../data/50x50/file_array_no_padding.npy')
+    X = np.load('../data/50x50/image_array_2d.npy')
+    fname = np.load('../data/50x50/file_array_2d.npy')
     # X = X[:1000,:]
     # fname = fname[:1000]
     n_clusters = 4

@@ -55,24 +55,26 @@
     <div class="container">
 
       <div class="starter-template">
-        <h2>Recommendations</h2>
-        <a href="/">Return to Search Page</a>
-        {% if image_list %}
-        <table>
+        <!-- <h2>Search Results</h2>
+        <a href="/">Return to Search Page</a> -->
+        <h3>Your Selection</h3>
+        <td><img src="{{ url_for('download_file', filename=img_name) }}"></td>
+        <h3>Your Recommendations</h3>
+        <!-- {% if image_list %} -->
+        <!-- <table>
             <tbody>
             {% for img_name in image_list %}
                 <tr>
-                    <td><a href="{{url_for('recommendations', type=img_name)}}">{{img_name[:-4]}}</a></td>
+                    <td><a href="{{url_for('wines', type=img_name)}}">{{img_name[:-4]}}</a></td>
                     
                     <td><img src="{{ url_for('download_file', filename=img_name) }}"></td>                
                     </a>
                     </tr>
             {% endfor %}
-            </tbody>
         </table>
         {% else %}
           No results :(
-        {% endif %}
+        {% endif %} -->
       </div>
 
     </div><!-- /.container -->

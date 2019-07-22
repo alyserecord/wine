@@ -42,8 +42,8 @@ def resize_images(filepath,pixel_1,pixel_2,colors,saved_filename,flatten=True):
         images = np.zeros((len(os.listdir(filepath)),(pixel_1 * pixel_2 * colors)))
     else:
         images = np.zeros((len(os.listdir(filepath)), pixel_1, pixel_2,colors))
-    file_names = []
 
+    file_names = []
     for idx,fname in enumerate(os.listdir(filepath)):
         image = io.imread(os.path.join(filepath,fname))
         image_resized = resize(image,(pixel_1,pixel_2,colors),mode='constant')
@@ -99,7 +99,7 @@ def merge_and_sort(image_array_filepath,filename_array_filepath,df_filepath,pixe
     df = pd.read_csv(df_filepath)
     image_df = pd.concat([images,filename],axis=1,join_axes=[images.index])
     merged = pd.merge(image_df,df,how='inner',left_on='wine',right_on='name')
-    merged = drop_outliers(merged)
+    # merged = drop_outliers(merged)
     
     #re-save the image array after merging all files to ensure image pixels are in correct order
     pixel_cols = pixel_1 * pixel_2 * colors
@@ -129,7 +129,6 @@ if __name__ == '__main__':
     pixel_1 = 50
     pixel_2 = 50
     colors = 3
-    # resize_images(filepath,pixel_1,pixel_2,colors)
     # resize_images_with_padding(filepath,pixel_1,pixel_2,colors)
-    resize_images(filepath,pixel_1,pixel_2,colors,'cnn',flatten=False)
-    # merge_and_sort('../data/50x50/image_array_no_padding.npy','../data/50x50/file_array_no_padding.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors)
+    resize_images(filepath,pixel_1,pixel_2,colors,'2d',flatten=True)
+    merge_and_sort('../data/50x50/image_array_2d.npy','../data/50x50/file_array_2d.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors)

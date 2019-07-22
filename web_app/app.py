@@ -38,6 +38,12 @@ MEDIA_FOLDER = '../images/'
 def download_file(filename):
     return send_from_directory(MEDIA_FOLDER, filename)
 
+@app.route('/recomendations', methods=['GET','POST'])
+def recommendations():
+    selected_wine = request.args.get('type')
+    print(selected_wine)
+    return render_template('recommendations.html',img_name = selected_wine)
+
 
 
 if __name__ == '__main__':
