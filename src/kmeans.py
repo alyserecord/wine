@@ -1,14 +1,12 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
-from PIL import Image
-from os import path
+p
 
 def kmeans(X,n_clusters):
     kmeans = KMeans(n_clusters=n_clusters)
     kmeans.fit(X)
-    return kmeans.labels_
+    return kmeans.labels_,kmeans.inertia_
 
 def add_labels_to_df(labels,filepath):
     labels = pd.DataFrame(labels)
@@ -30,14 +28,29 @@ def show_cluster(fname,labels,n_clusters):
             ax.imshow(image)
         plt.savefig('../figures/no_padding_cluster{}.jpg'.format(cluster))
 
+def elbow_plot(X,num_k):
+    fig, ax = plt.subplots(figsize=(8,8))
+
+    rss_arr = []
+    for i in range(1,num_k):
+        _,rss = kmeans(X,i)
+        rss_arr.append(rss)
+    ax.plot(range(1,num_k),rss_arr)
+    ax.set_xlabel('k Number of Clusters')
+    ax.set_ylabel('RSS')
+    plt.show()
+
+
+
 if __name__ == '__main__':
     X = np.load('../data/50x50/image_array_2d.npy')
     fname = np.load('../data/50x50/file_array_2d.npy')
     # X = X[:1000,:]
     # fname = fname[:1000]
-    n_clusters = 4
-    labels = kmeans(X,n_clusters)
+    n_clusters = 10
+    labels, rss = kmeans(X,n_clusters)
     
     filepath = '../data/50x50/sorted_df.csv'
     add_labels_to_df(labels,filepath)
     # show_cluster(fname,labels,n_clusters)
+    # elbow_plot(X,25)

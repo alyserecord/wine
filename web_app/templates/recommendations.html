@@ -58,23 +58,63 @@
         <!-- <h2>Search Results</h2>
         <a href="/">Return to Search Page</a> -->
         <h3>Your Selection</h3>
-        <td><img src="{{ url_for('download_file', filename=img_name) }}"></td>
-        <h3>Your Recommendations</h3>
-        <!-- {% if image_list %} -->
-        <!-- <table>
+        <table>
             <tbody>
-            {% for img_name in image_list %}
                 <tr>
-                    <td><a href="{{url_for('wines', type=img_name)}}">{{img_name[:-4]}}</a></td>
-                    
-                    <td><img src="{{ url_for('download_file', filename=img_name) }}"></td>                
-                    </a>
+                    <td><img src="{{ url_for('download_file', filename=img_name) }}"></td>
+                    <td>
+                    <table>
+                        <tbody>
+                                <tr>
+                                    <td><b>{{img_name[:-4]}}</b></a></td>
+                                </tr>
+                                <tr>
+                                    <td>{{selected_wine_att[0]}} from {{selected_wine_att[1]}}</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Price: {{selected_wine_att[2]}}, Image KMeans Cluster: {{selected_wine_att[3]}}</a></td>
+                                </tr>
+                                <tr>
+                                    <td>{{selected_wine_att[4]}}</a></td>
+                                </tr>
+                            </tbody>
+                    </table>
+                    </td>
+                    </tr>
+            </tbody>
+        </table>
+
+        <h3>Your Recommendations</h3>
+        {% if recs %}
+        <table>
+            <tbody>
+            {% for row in recs %}
+                <tr>
+                    <td><img src="{{ url_for('download_file', filename=row[0]) }}"></td>
+                    <td>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><b>{{row[1]}}</b></a></td>
+                            </tr>
+                            <tr>
+                                <td>{{row[3]}} from {{row[4]}}</a></td>
+                            </tr>
+                            <tr>
+                                <td>Price: {{row[2]}}, Image KMeans Cluster: {{row[5]}}</a></td>
+                            </tr>
+                            <tr>
+                                <td>{{row[6]}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </td>
                     </tr>
             {% endfor %}
         </table>
         {% else %}
           No results :(
-        {% endif %} -->
+        {% endif %}
       </div>
 
     </div><!-- /.container -->

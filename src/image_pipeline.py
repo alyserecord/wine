@@ -1,12 +1,12 @@
 import pandas as pd
 import numpy as np 
-import boto3
+# import boto3
 from skimage import io
 from skimage.transform import resize
 from PIL import Image, ImageOps
 import matplotlib.pyplot as plt
 import os
-s3 = boto3.resource('s3')
+# s3 = boto3.resource('s3')
 
 import warnings
 warnings.filterwarnings('ignore') 
@@ -86,13 +86,16 @@ def resize_images_with_padding(filepath,pixel_1,pixel_2,colors):
 
 
 
-def merge_and_sort(image_array_filepath,filename_array_filepath,df_filepath,pixel_1,pixel_2,colors):
+def merge_and_sort(image_array_filepath,filename_array_filepath,df_filepath,pixel_1,pixel_2,colors,cnn=True):
     '''
     Takes in arrays filepaths for images pixels, filenames, and a dataframe. Merges the three datasets so
     so that the image can be acessed by name and the df and images can be used in models together. 
     Resaves the image pixels after sorting, creates a price bins array, and resaves the sorted dataframe.
     '''
-    images = pd.DataFrame(np.load(image_array_filepath))
+    if cnn == True:
+        images = pd.DataFrame(row.flatten() for row in np.load(image_array_filepath))
+    else:
+        images = pd.DataFrame(np.load(image_array_filepath))
     filename = pd.DataFrame(np.load(filename_array_filepath))
     cols = ['wine']
     filename.columns = cols
@@ -104,9 +107,15 @@ def merge_and_sort(image_array_filepath,filename_array_filepath,df_filepath,pixe
     #re-save the image array after merging all files to ensure image pixels are in correct order
     pixel_cols = pixel_1 * pixel_2 * colors
     onlyimages = merged.iloc[:,:pixel_cols]
-    np.save(image_array_filepath,onlyimages.values)
+    if cnn == True:
+        onlyimages = onlyimages.values.reshape(onlyimages.shape[0], 64, 64,3)
+        np.save(image_array_filepath,onlyimages.values)
+    else:
+        np.save(image_array_filepath,onlyimages.values)
+    
     # save an array price bins only for PCA analysis
-    np.save('../data/{}x{}/sorted_price'.format(pixel_1,pixel_2),merged['price_bins'].values)
+    # np.save('../data/{}x{}/sorted_price'.format(pixel_1,pixel_2),merged['price_bins'].values)
+
     # save a new copy of the dataframe that is sorted according to the image pixel array
     cols_to_skip = pixel_1*pixel_2*colors + 2
     subset= merged.iloc[:,cols_to_skip:]
@@ -126,9 +135,15 @@ if __name__ == '__main__':
     # # retrieve_images(s3_keys,bucket)p
 
     filepath = '../images/'
-    pixel_1 = 50
-    pixel_2 = 50
+    pixel_1 = 64
+    pixel_2 = 64
     colors = 3
     # resize_images_with_padding(filepath,pixel_1,pixel_2,colors)
-    resize_images(filepath,pixel_1,pixel_2,colors,'2d',flatten=True)
-    merge_and_sort('../data/50x50/image_array_2d.npy','../data/50x50/file_array_2d.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors)
+
+    # for regular kmeans without cnn:
+    # resize_images(filepath,pixel_1,pixel_2,colors,'2d',flatten=True)
+    # merge_and_sort('../data/50x50/image_array_2d.npy','../data/50x50/file_array_2d.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors,cnn=False)
+
+    # for kmeans with ccn
+    # resize_images(filepath,pixel_1,pixel_2,colors,'cnn',flatten=False)
+    merge_and_sort('../data/64x64/image_array_cnn.npy','../data/64x64/file_array_cnn.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors,cnn=True)

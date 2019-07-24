@@ -5,6 +5,9 @@ from flask import Flask, render_template,request, send_from_directory
 import pandas as pd
 import os
 app = Flask(__name__)
+import sys
+sys.path.insert(0, '../src')
+from recommender import CosineSimilarity
 
 # home page
 @app.route('/', methods=['GET','POST'])
@@ -38,11 +41,43 @@ MEDIA_FOLDER = '../images/'
 def download_file(filename):
     return send_from_directory(MEDIA_FOLDER, filename)
 
+def get_wines(selected_wine):
+    df = pd.read_csv('../data/50x50/sorted_df.csv')
+    nmf_topics = pd.read_csv('../data/50x50/nmf_topics.csv')    
+
+    cs = CosineSimilarity(df,nmf_topics)
+    cs.prep_sorted_data()
+    cs.scale_nmf_clusters()
+    cs.merge_files()
+    cs.generate_matrix()
+
+    return cs.get_recommendation(selected_wine,20)  
+
+
 @app.route('/recomendations', methods=['GET','POST'])
 def recommendations():
+    df = pd.read_csv('../data/50x50/sorted_df.csv')
     selected_wine = request.args.get('type')
-    print(selected_wine)
-    return render_template('recommendations.html',img_name = selected_wine)
+    selected_wine_att = []
+    selected_wine_att.append(df[df['name']==selected_wine[:-4]]['varietal'].values[0])
+    selected_wine_att.append(df[df['name']==selected_wine[:-4]]['origin'].values[0])
+    selected_wine_att.append(df[df['name']==selected_wine[:-4]]['price'].values[0])
+    selected_wine_att.append(df[df['name']==selected_wine[:-4]]['kmeans_label'].values[0])
+    selected_wine_att.append(df[df['name']==selected_wine[:-4]]['description'].values[0])
+    wines = get_wines(selected_wine[:-4])
+    # print(wines)
+    items = []
+    for wine in wines:
+        lst = []
+        lst.append('{}.jpg'.format(wine))
+        lst.append(wine)
+        lst.append(df[df['name']==wine]['price'].values[0])
+        lst.append(df[df['name']==wine]['varietal'].values[0])
+        lst.append(df[df['name']==wine]['origin'].values[0])
+        lst.append(df[df['name']==wine]['kmeans_label'].values[0])        
+        lst.append(df[df['name']==wine]['description'].values[0])
+        items.append(lst)
+    return render_template('recommendations.html',img_name = selected_wine, selected_wine_att = selected_wine_att, recs = items)
 
 
 

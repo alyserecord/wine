@@ -125,10 +125,14 @@ class WineCleaner():
         merged = pd.merge(df,desc_df,how='left',left_on='name',right_on='name',left_index=True)
         merged = merged[merged['description'] != ' View More']
         merged = merged[~merged['description'].isnull()]
+        merged['description'] = merged['description'].str.rstrip('View More')
         return merged
 
     def save_df(self,df,filepath):
         df.to_csv(filepath)
+
+    def drop_outlier_countries(self,df):
+        return df[~(df.origin.isin(['China','Croatia','Slovenia','Canada','Uruguay','Lebanon','England','Japan','Hungary','Macedonia']))]
 
 
 if __name__ =='__main__':
@@ -153,4 +157,5 @@ if __name__ =='__main__':
     'Croatia','Lebanon','Slovenia','Macedonia','China']
     new_df = wine.string_replace(new_df,col,str_lst)
     new_df = wine.merge_descriptions(new_df,desc_df)
+    new_df = wine.drop_outlier_countries(new_df)
     wine.save_df(new_df,'../data/cleaned_data.csv')
