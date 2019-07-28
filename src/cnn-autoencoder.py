@@ -1,4 +1,4 @@
-# import pandas as pd
+import pandas as pd
 import numpy as np
 from keras.layers import Conv2D, MaxPooling2D, UpSampling2D, Flatten, Reshape
 from keras.models import Sequential
@@ -6,107 +6,129 @@ from sklearn.model_selection import train_test_split
 from keras import backend as K
 from theano import function
 import matplotlib.pyplot as plt
-# import kmeans 
+import kmeans 
 
-def build_autoencoder_model():
-    
-    autoencoder = Sequential()
-    
-    # encoder layers
-    autoencoder.add(Conv2D(32,(3,3), activation='relu', padding='same',input_shape=(50,50,3)))
-    autoencoder.add(MaxPooling2D((2,2), padding = 'same'))
-    autoencoder.add(Conv2D(8,(3,3), activation='relu', padding='same'))
-    autoencoder.add(MaxPooling2D((2,2), padding = 'same'))
+class Autoencoder():
 
-    autoencoder.add(Flatten())
-    autoencoder.add(Reshape((13,13,8)))
+    def __init__(self,model=None):
+        
+        if model != None:
+            self.model = model
 
-    # decoder layers
-    autoencoder.add(Conv2D(8,(3,3), activation='relu', padding='same'))
-    autoencoder.add(UpSampling2D((2,2)))
-    autoencoder.add(Conv2D(32,(3,3),activation='relu', padding='same'))
-    autoencoder.add(UpSampling2D((2,2)))
-    autoencoder.add(Conv2D(3,(3,3), activation='sigmoid', padding='same'))
+    def build_autoencoder_model(self):
+            
+        autoencoder = Sequential()
+        
+        # encoder layers
+        autoencoder.add(Conv2D(128,(3,3), activation='relu', padding='same',input_shape=(64,64,3)))
+        autoencoder.add(MaxPooling2D((2,2), padding = 'same'))
+        autoencoder.add(Conv2D(64,(3,3), activation='relu', padding='same'))
+        autoencoder.add(MaxPooling2D((2,2), padding = 'same'))
+        autoencoder.add(Conv2D(32,(3,3), activation='relu', padding='same'))
+        autoencoder.add(MaxPooling2D((2,2), padding = 'same'))
+        autoencoder.add(Conv2D(8,(3,3), activation='relu', padding='same'))
+        autoencoder.add(MaxPooling2D((2,2), padding = 'same'))
 
-    # autoencoder.summary()
+        autoencoder.add(Flatten())
+        autoencoder.add(Reshape((4,4,8)))
 
-    autoencoder.compile(optimizer='adam', loss='mean_squared_error')
+        # decoder layers
+        autoencoder.add(Conv2D(8,(3,3), activation='relu', padding='same'))
+        autoencoder.add(UpSampling2D((2,2)))
+        autoencoder.add(Conv2D(32,(3,3), activation='relu', padding='same'))
+        autoencoder.add(UpSampling2D((2,2)))
+        autoencoder.add(Conv2D(64,(3,3),activation='relu', padding='same'))
+        autoencoder.add(UpSampling2D((2,2)))
+        autoencoder.add(Conv2D(128,(3,3), activation='relu', padding='same'))
+        autoencoder.add(UpSampling2D((2,2)))
+        autoencoder.add(Conv2D(3,(3,3), activation='sigmoid', padding='same'))
 
-    return autoencoder
+        # autoencoder.summary()
 
-def fit(model,train,test,batch_size,epochs):
-    model.fit(train, train,
-                epochs=epochs,
-                batch_size=batch_size,
-                validation_data=(test,test))
+        autoencoder.compile(optimizer='adam', loss='mean_squared_error')
 
-def plot_before_after(test,test_decoded,n=10):
-    plt.figure(figsize=(n*2, 4))
-    for i in range(n):
-        # display original
-        ax = plt.subplot(2, n, i + 1)
-        plt.imshow(X[i])
-        ax.get_xaxis().set_visible(False)
-        ax.get_yaxis().set_visible(False)
-
-        # display reconstruction
-        ax = plt.subplot(2, n, i + 1 + n)
-        plt.imshow(test_decoded[i])
-        ax.get_xaxis().set_visible(False)
-        ax.get_yaxis().set_visible(False)
-
-    # plt.savefig('test3.png')
-
-def get_layer(model,x,layer):
-
-    get_layer_output = K.function([model.layers[0].input],
-                                  [model.layers[layer].output])
-    layer_output = get_layer_output([x])[0]
-
-    return layer_output
+        self.model = autoencoder
 
 
-def cluster_kmeans(encoded_layer,n_clusters):
-    kmeans = KMeans(n_clusters=n_clusters)
-    kmeans.fit(encoded_layer)
-    return kmeans.labels_,kmeans.inertia_
+    def fit(self,train,test,batch_size,epochs):
+        self.model.fit(train, train,
+                    epochs=epochs,
+                    batch_size=batch_size,
+                    validation_data=(test,test))
 
-def show_cluster(fname,labels,n_clusters):
-    for cluster in range(n_clusters):
-        fig,ax = plt.subplots(9,9,figsize=(16,16))
-        fig.suptitle('Cluster {}'.format(cluster),fontsize=60)
-        wines = fname[labels == cluster]
-        for i,ax in enumerate(ax.flatten()):
-            image = Image.open('../images/{}.jpg'.format(wines[i]))
-            ax.set_xticks([]) 
-            ax.set_yticks([]) 
-            ax.grid()
-            ax.imshow(image)
-        plt.savefig('../figures/no_padding_cluster{}.jpg'.format(cluster))
+    def get_rmse(self,test):
+        return self.model.evaluate(test,test)
 
+    def predict(self,test):
+        return self.model.predict(test)
+
+    def plot_before_after(self,test,test_decoded,n=10):
+        plt.figure(figsize=(n*2, 4))
+        for i in range(n):
+            # display original
+            ax = plt.subplot(2, n, i + 1)
+            plt.imshow(X[i])
+            ax.get_xaxis().set_visible(False)
+            ax.get_yaxis().set_visible(False)
+
+            # display reconstruction
+            ax = plt.subplot(2, n, i + 1 + n)
+            plt.imshow(test_decoded[i])
+            ax.get_xaxis().set_visible(False)
+            ax.get_yaxis().set_visible(False)
+
+        plt.savefig('gitfiasco.png')
+
+    def get_layers(self,X,layer):
+
+        batches = np.split(X,5)
+        for i,batch in enumerate(batches):
+            get_layer_output = K.function([self.model.layers[0].input],
+                                        [self.model.layers[layer].output])
+            layer_output = get_layer_output([batch])[0]
+
+            if i == 0:
+                final_layers = layer_output
+            else:
+                final_layers = np.vstack((final_layers,layer_output))
+        self.layers = final_layers
+        return self.layers
+
+
+    def execute_kmeans(self,n_clusters,df_filepath):
+        labels,inertia = kmeans.kmeans_fit(self.layers,n_clusters=n_clusters)
+        kmeans.add_labels_to_df(labels,df_filepath)
+
+    def show_cluster(self,labels,n_clusters):
+        
+        pass
 
 
 if __name__=='__main__':
-    X = np.load('../data/50x50/image_array_cnn.npy')
-    # fname = 
+    X = np.load('../data/64x64/image_array_cnn.npy')
     X = X[:500]
     train, test = train_test_split(X, test_size=0.2)
 
-
-    model = build_autoencoder_model()
-
-    batch_size = 500
+    #if building the model from scratch
+    cnn = Autoencoder()
+    cnn.build_autoencoder_model()
+    batch_size = 100
     epochs = 1
-    
-    fit(model,train,test,batch_size,epochs)
-
-    scores = model.evaluate(test, test)
+    cnn.fit(train,test,batch_size,epochs)
+    scores = cnn.get_rmse(test)
     print(scores)
 
-    test_decoded = model.predict(X)
+    #if passing in a model
+    # model = 
+    # cnn = Autoencoder(model)
 
-    plot_before_after(test,test_decoded,10)
 
-    # # instantiate callbacks
-    # tensorboard = TensorBoard(log_dir='./autoencoder_logs', histogram_freq=2, batch_size=batch_size, write_graph=True, write_grads=True, write_images=True)
-    # earlystopping = EarlyStopping(monitor='val_loss', patience=2)
+    X_decoded = cnn.predict(X)
+    cnn.plot_before_after(X,X_decoded,10)
+
+    layers = cnn.get_layers(X,8)
+
+    df_filepath = '../data/64x64/sorted_df.csv'
+    n_clusters = 7
+    cnn.execute_kmeans(n_clusters,df_filepath)
+    

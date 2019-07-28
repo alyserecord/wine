@@ -109,7 +109,7 @@ def merge_and_sort(image_array_filepath,filename_array_filepath,df_filepath,pixe
     onlyimages = merged.iloc[:,:pixel_cols]
     if cnn == True:
         onlyimages = onlyimages.values.reshape(onlyimages.shape[0], 64, 64,3)
-        np.save(image_array_filepath,onlyimages.values)
+        np.save(image_array_filepath,onlyimages)
     else:
         np.save(image_array_filepath,onlyimages.values)
     
@@ -145,5 +145,5 @@ if __name__ == '__main__':
     # merge_and_sort('../data/50x50/image_array_2d.npy','../data/50x50/file_array_2d.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors,cnn=False)
 
     # for kmeans with ccn
-    # resize_images(filepath,pixel_1,pixel_2,colors,'cnn',flatten=False)
+    resize_images(filepath,pixel_1,pixel_2,colors,'cnn',flatten=False)
     merge_and_sort('../data/64x64/image_array_cnn.npy','../data/64x64/file_array_cnn.npy','../data/cleaned_data.csv',pixel_1,pixel_2,colors,cnn=True)
