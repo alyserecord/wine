@@ -55,6 +55,7 @@ class Autoencoder():
                     epochs=epochs,
                     batch_size=batch_size,
                     validation_data=(test,test))
+        self.history = self.model.history.history
 
     def get_rmse(self,test):
         return self.model.evaluate(test,test)
@@ -94,14 +95,23 @@ class Autoencoder():
         self.layers = final_layers
         return self.layers
 
+    def plot_loss(self):
+
+        fig,ax = plt.subplots(figsize=(8,6))
+        ax.plot(self.history['loss'])
+        ax.plot(self.history['val_loss'])
+        ax.set_title('CNN Autoencoder Model Loss')
+        ax.set_ylabel('Loss')
+        ax.set_xlabel('Epoch')
+        plt.legend(['Train', 'Test'], loc='upper right')
+        plt.savefig('cnn_loss.png')
 
     def execute_kmeans(self,n_clusters,df_filepath):
         labels,inertia = kmeans.kmeans_fit(self.layers,n_clusters=n_clusters)
         kmeans.add_labels_to_df(labels,df_filepath)
 
-    def show_cluster(self,labels,n_clusters):
-        
-        pass
+    def show_cluster(self,n_clusters,df_filepath):
+        kmeans.show_cluster(n_clusters,df_filepath)
 
 
 if __name__=='__main__':
@@ -113,7 +123,7 @@ if __name__=='__main__':
     cnn = Autoencoder()
     cnn.build_autoencoder_model()
     batch_size = 100
-    epochs = 1
+    epochs = 2
     cnn.fit(train,test,batch_size,epochs)
     scores = cnn.get_rmse(test)
     print(scores)
@@ -131,4 +141,6 @@ if __name__=='__main__':
     df_filepath = '../data/64x64/sorted_df.csv'
     n_clusters = 7
     cnn.execute_kmeans(n_clusters,df_filepath)
+
+    cnn.plot_loss()
     

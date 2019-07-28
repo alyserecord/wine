@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
 
 
 def kmeans_fit(X,n_clusters):
@@ -15,19 +16,21 @@ def add_labels_to_df(labels,filepath):
     merged = pd.concat([df,labels],axis=1,join_axes=[df.index])
     merged.to_csv(filepath,index=False)
 
-def show_cluster(labels,n_clusters):
+def show_cluster(n_clusters,filepath):
     for cluster in range(n_clusters):
         fig,ax = plt.subplots(9,9,figsize=(16,16))
         fig.suptitle('Cluster {}'.format(cluster),fontsize=60)
         # wines = fname[labels == cluster]
-
+        df = pd.read_csr(filepath)
+        wines = df['name'].loc[df['kmeans_label']==cluster]
+        wines = wines.name.tolist()
         for i,ax in enumerate(ax.flatten()):
             image = Image.open('../images/{}.jpg'.format(wines[i]))
             ax.set_xticks([]) 
             ax.set_yticks([]) 
             ax.grid()
             ax.imshow(image)
-        plt.savefig('../figures/no_padding_cluster{}.jpg'.format(cluster))
+        plt.savefig('../figures/cnn_cluster{}.jpg'.format(cluster))
 
 def elbow_plot(X,num_k):
     fig, ax = plt.subplots(figsize=(8,8))
@@ -38,7 +41,7 @@ def elbow_plot(X,num_k):
         rss_arr.append(rss)
     ax.plot(range(1,num_k),rss_arr)
     ax.set_xlabel('k Number of Clusters')
-    ax.set_ylabel('RSS')
+    ax.set_ylabel('Error')
     plt.show()
 
 
