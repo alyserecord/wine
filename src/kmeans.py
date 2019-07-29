@@ -20,18 +20,18 @@ def add_labels_to_df(labels,filepath):
 
 def show_cluster(n_clusters,filepath):
     for cluster in range(n_clusters):
-        fig,ax = plt.subplots(4,4,figsize=(8,8))
+        fig,ax = plt.subplots(4,4,figsize=(10,10))
         fig.suptitle('Cluster {}'.format(cluster+1),fontsize=28)
         df = pd.read_csv(filepath)
         wines = df['name'].loc[df['kmeans_label']==cluster]
-        wines = wines.tolist()[::-1]
+        wines = wines.tolist()[::-4]
         for i,ax in enumerate(ax.flatten()):
             image = Image.open('../images/{}.jpg'.format(wines[i]))
             ax.set_xticks([]) 
             ax.set_yticks([]) 
             ax.grid()
             ax.imshow(image)
-        plt.savefig('../figures/cnn_cluster{}.jpg'.format(cluster+1))
+        plt.savefig('../figures/cnnv2_cluster{}.jpg'.format(cluster+1))
 
 def elbow_plot(X,num_k):
     fig, ax = plt.subplots(figsize=(8,8))
