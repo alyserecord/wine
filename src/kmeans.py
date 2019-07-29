@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from skimage.io import imshow
+from PIL import Image
 from sklearn.cluster import KMeans
 
 
@@ -18,19 +20,18 @@ def add_labels_to_df(labels,filepath):
 
 def show_cluster(n_clusters,filepath):
     for cluster in range(n_clusters):
-        fig,ax = plt.subplots(9,9,figsize=(16,16))
-        fig.suptitle('Cluster {}'.format(cluster),fontsize=60)
-        # wines = fname[labels == cluster]
-        df = pd.read_csr(filepath)
+        fig,ax = plt.subplots(4,4,figsize=(8,8))
+        fig.suptitle('Cluster {}'.format(cluster+1),fontsize=28)
+        df = pd.read_csv(filepath)
         wines = df['name'].loc[df['kmeans_label']==cluster]
-        wines = wines.name.tolist()
+        wines = wines.tolist()[::-1]
         for i,ax in enumerate(ax.flatten()):
             image = Image.open('../images/{}.jpg'.format(wines[i]))
             ax.set_xticks([]) 
             ax.set_yticks([]) 
             ax.grid()
             ax.imshow(image)
-        plt.savefig('../figures/cnn_cluster{}.jpg'.format(cluster))
+        plt.savefig('../figures/cnn_cluster{}.jpg'.format(cluster+1))
 
 def elbow_plot(X,num_k):
     fig, ax = plt.subplots(figsize=(8,8))

@@ -7,6 +7,7 @@ from keras import backend as K
 from theano import function
 import matplotlib.pyplot as plt
 import kmeans 
+import pickle
 
 class Autoencoder():
 
@@ -98,8 +99,8 @@ class Autoencoder():
     def plot_loss(self):
 
         fig,ax = plt.subplots(figsize=(8,6))
-        ax.plot(self.history['loss'])
-        ax.plot(self.history['val_loss'])
+        ax.plot(cnn.model.history.history['loss'])
+        ax.plot(cnn.model.history.history['val_loss'])
         ax.set_title('CNN Autoencoder Model Loss')
         ax.set_ylabel('Loss')
         ax.set_xlabel('Epoch')
