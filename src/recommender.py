@@ -12,7 +12,7 @@ class CosineSimilarity():
 
     def prep_sorted_data(self):
         self.df = self.df[['origin','price','red','white','sparking','kmeans_label']]
-        self.df = pd.concat([self.df,pd.get_dummies(self.df['origin'], prefix='origin')],axis=1)
+        self.df = pd.concat([self.df,pd.get_dummies(self.df['origin'], prefix='origin').mul(2)],axis=1)
         self.df.drop(['origin'],axis=1,inplace=True)
         self.df = pd.concat([self.df,pd.get_dummies(self.df['kmeans_label'], prefix='image_cluster').mul(2)],axis=1)
         # self.df.drop(df['kmeans_label'],axis=1,inplace=True)
@@ -38,8 +38,8 @@ class CosineSimilarity():
         return items
 
 if __name__ == '__main__':
-    df = pd.read_csv('../data/50x50/sorted_df.csv')
-    nmf_topics = pd.read_csv('../data/50x50/nmf_topics.csv')
+    df = pd.read_csv('../data/64x64/sorted_df.csv')
+    nmf_topics = pd.read_csv('../data/64x64/nmf_topics.csv')
 
     cs = CosineSimilarity(df,nmf_topics)
     cs.prep_sorted_data()

@@ -90,17 +90,17 @@ class NLP():
         '''
         '''
         df = pd.DataFrame(self.W)
-        df.to_csv('../data/50x50/nmf_topics.csv',index=False)
+        df.to_csv('../data/64x64/nmf_topics.csv',index=False)
 
 
 if __name__ == '__main__':
     # first time read in dataframe and combine the varietal and description
-    df = pd.read_csv('../data/50x50/sorted_df.csv')
-    df['new_desc'] = df['varietal'] + df['description']
-    arr = np.array(df['new_desc'].values)
+    df = pd.read_csv('../data/64x64/sorted_df.csv')
+    # df['new_desc'] = df['varietal'] + ' ' + df['description']
+    # arr = np.array(df['new_desc'].values)
 
     # read in lemmatized desc+varietal
-    # arr = np.load('../data/lemmatized_desc.npy')
+    arr = np.load('../data/lemmatized_desc.npy')
 
     custom_stop_words = ['view more','view','color','dish','grape',
     'year','estate','pair','ideal','flavor','variety','wine','palate',
@@ -116,12 +116,12 @@ if __name__ == '__main__':
     'cover','slowly','bay','leap','1er','original','north','translate',
     'western','definitely','label','jump','able','winery','del','farming',
     'story','couple','unmistakable','bear','trademark','depend','good',
-    'blend','lee','use']
+    'blend','lee','use','day','harvest','locate','source','farm']
     nlp = NLP(arr)
-    nlp.lemmatizer()
+    # nlp.lemmatizer()
     nlp.count_vectorizer(custom_stop_words)
     nlp.tfidf_process()
-    nlp.nmf_process(25)
+    nlp.nmf_process(45)
     nlp.display_top_words('nmf',df,20)
     nlp.save_nmf_topics()
     # nlp.plot_latent_top_hist()
