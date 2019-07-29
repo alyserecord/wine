@@ -7,11 +7,34 @@ from sklearn.cluster import KMeans
 
 
 def kmeans_fit(X,n_clusters):
+    '''
+    Fits a KMeans model with the provided data and number of clusters.
+
+    input:
+    X: data to be clustered
+    n_clusters: number of clusters to use
+
+    output:
+    array of cluster labels
+    inertia of the clusters
+    '''
     kmeans = KMeans(n_clusters=n_clusters)
     kmeans.fit(X)
     return kmeans.labels_,kmeans.inertia_
 
 def add_labels_to_df(labels,filepath):
+    '''
+    Adds the cluster labels to a dataframe consisting of other metadata
+    about the items.
+
+    imput:
+    labels: kmeans cluster labels provided by the kmeans_fit function
+    filepath: filepath to the dataframe of metadata where the kmeans 
+    label will be added
+
+    output:
+    None (resaves the dataframe with the kmeans label)
+    '''
     labels = pd.DataFrame(labels)
     df = pd.read_csv(filepath)
     labels.columns = ['kmeans_label']
@@ -19,6 +42,15 @@ def add_labels_to_df(labels,filepath):
     merged.to_csv(filepath,index=False)
 
 def show_cluster(n_clusters,filepath):
+    '''
+    Saves a plot per cluster with example images from the cluster.
+
+    input:
+    n_clusters: number of clusters to plot
+    filepath: filbath to dataframe with image clusters
+
+    output: None (saves plot images)
+    '''
     for cluster in range(n_clusters):
         fig,ax = plt.subplots(4,4,figsize=(10,10))
         fig.suptitle('Cluster {}'.format(cluster+1),fontsize=28)
@@ -34,6 +66,19 @@ def show_cluster(n_clusters,filepath):
         plt.savefig('../figures/cnnv2_cluster{}.jpg'.format(cluster+1))
 
 def elbow_plot(X,num_k):
+    '''
+    Plots the error for a range of cluster numbers Each cluster number 
+    calls the kmeans_fit method to calculate the error depicted 
+    in the elbow plot.
+
+    input:
+    X: data to be clustered
+    num_k: max number of clusters, 1-num_k will be utlized in the elbo plot
+    
+    output:
+    elbow plot
+
+    '''
     fig, ax = plt.subplots(figsize=(8,8))
 
     rss_arr = []

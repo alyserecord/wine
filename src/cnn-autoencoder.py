@@ -228,7 +228,4 @@ if __name__=='__main__':
     df_filepath = '../data/64x64/sorted_df.csv'
     n_clusters = 7
     cnn.execute_kmeans(n_clusters,df_filepath)
-    cnn.show_cluster()
-
-
-    
+    cnn.show_cluster(n_clusters,df_filepath)
