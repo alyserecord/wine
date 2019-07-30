@@ -113,6 +113,16 @@ class Autoencoder():
         return self.model.predict(X)
 
     def plot_before_after(self,test,test_decoded,n=10):
+        '''
+        Plots the image and reconstructed image.
+
+        Input:
+        test: test dataset of image arrays
+        test_decoded: reconstructed test dataset image arrays (predict results)
+
+
+        Output: None (saves figure to a file)
+        '''
         plt.figure(figsize=(n*2, 4))
         for i in range(n):
             # display original
@@ -151,8 +161,8 @@ class Autoencoder():
                 final_layers = layer_output
             else:
                 final_layers = np.vstack((final_layers,layer_output))
-        self.layers = final_layers
-        return self.layers
+        self.encoding = final_layers
+        return self.encoding
 
     def plot_loss(self):
         '''
@@ -182,7 +192,7 @@ class Autoencoder():
 
         output: None
         '''
-        labels,inertia = kmeans.kmeans_fit(self.layers,n_clusters=n_clusters)
+        labels,inertia = kmeans.kmeans_fit(self.encoding,n_clusters=n_clusters)
         kmeans.add_labels_to_df(labels,df_filepath)
 
     def show_cluster(self,n_clusters,df_filepath):
