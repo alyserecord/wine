@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Wine Recommender</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
@@ -42,8 +42,8 @@
             function updateVarietal() {
                 var origin = dropdown.origin.val();
                 dropdown.varietal.attr('disabled', 'disabled');
+                
                 console.log(origin);
-    
                 if (origin.length) {
                     dropdown.varietal.empty();
                     $.getJSON("{{ url_for('get_varietal') }}", {origin: origin}, function(data) {
@@ -68,6 +68,46 @@
     
         });  
     </script>   
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <script charset="utf-8" type="text/javascript">
+          $(function() {
+              var dropdown = {
+                  origin: $('#select_origin'),
+                  varietal: $('#select_varietal'),
+                  price: $('#select_price')
+              };
+      
+              // function to call app.py and update price dropdown
+              function updatePrice() {
+                  var origin = dropdown.origin.val();
+                  var varietal = dropdown.varietal.val();
+                  dropdown.price.attr('disabled', 'disabled');
+                  console.log(origin);
+                  console.log(varietal);
+                  if (varietal.length) {
+                      dropdown.price.empty();
+                      $.getJSON("{{ url_for('get_prices') }}", {origin: origin, varietal: varietal}, function(data) {
+                          console.log(data);
+                          data.forEach(function(item) {
+                              dropdown.price.append(
+                                  $('<option>', {
+                                      value: item.id,
+                                      text: item.id
+                                  })
+                              );
+                          });
+                          dropdown.price.removeAttr('disabled');
+                      });
+                  }
+              }
+      
+              // event listener on varietal dropdown change
+              dropdown.varietal.on('change', function() { 
+                  updatePrice();
+              });
+      
+          });  
+      </script>  
   </head> 
   <body>
       <div class="background">
@@ -87,11 +127,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Wine Recommender</a>
+          <a class="navbar-brand" href="/">Wine Recommender</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Search</a></li>
+            <li class="active"><a href="/">Search</a></li>
             <li><a href="#about">About</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -100,39 +140,32 @@
     <div class="container">
 
       <div class="starter-template">
-        <h2 style="color:white">Find your favorite wine</h2>
+        <br>
+        <br>
+        <h2 style="color:white">Find your favorite wine to receive recommendations.</h2>
         <p class="lead" style="color:white">Select from the below options to find a wine you like.</p>
-        
+        <br>
         <form action="/search_results" method='POST' >
-        <select name="origin" id='select_origin' required>            
-            <option selected="selected" value = ''>Select an origin </option>
+        <select name="origin" id='select_origin' class="form-control" style="max-width: 350px;" required>            
+            <option selected="selected" value = ''>Select a region* </option>
             {% for item in table['origin'].unique()|sort %}
             <option value="{{ item }}">{{ item }}</option>
             {% endfor %}
         </select>
-        <select name="varietal" id = 'select_varietal' disabled required>
-            <option selected="selected" value = ''>Select a varietal </option>
-            <!-- {% for item in table['varietal'].unique()|sort %}
-            <option value="{{ item }}">{{ item }}</option>
-            {% endfor %} -->
+        <br>
+        <br>
+        <select name="varietal" id = 'select_varietal' class="form-control" style="max-width: 350px;" disabled required>
+            <option selected="selected" value = ''>Select a varietal* </option>
+
         </select>
-        <select name="price" method="GET" action="/" required>
-          <option selected="selected" value = ''>Select a price range</option>
-          {% for item in table['price_bins'].unique()|sort %}
-          <option value="{{ item }}">{{ item }}</option>
-          {% endfor %}
-
-
-   
-
-
-        <!-- <select name="price" method="GET" action="/" required>
-            <option selected="selected" value = ''>Select a price range</option>
-            {% for item in table['price_bins'].unique()|sort %}
-            <option value="{{ item }}">{{ item }}</option>
-            {% endfor %}         -->
+        <br>
+        <br>
+        <select name="price" id = 'select_price' class="form-control" style="max-width: 350px;" disabled required>
+          <option selected="selected" value = ''>Select a price range*</option>
         </select>
-        <button type="submit" name="submit">Search</button>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-outline-secondary" name="submit">Search</button>
         </form>
       </div>
 

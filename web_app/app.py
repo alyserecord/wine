@@ -22,7 +22,7 @@ def search_results():
         selected_origin = request.form.get('origin')
         selected_varietal = request.form.get('varietal')
         selected_price = request.form.get('price')
-        df = pd.read_csv('../data/64x64/sorted_df.csv')
+        # df = pd.read_csv('../data/64x64/sorted_df.csv')
         selected = df[(df['origin']==selected_origin) & (df['varietal']==selected_varietal) & (df['price_bins']==selected_price)]
         try:
             subset = selected.sample(21)
@@ -31,7 +31,7 @@ def search_results():
         if subset.shape[0] > 0:
             subset['name'] = subset['name'].astype(str) + '.jpg'
             subset = subset['name'].tolist()
-            if len(subset)% 3 != 0:
+            if len(subset)% 3 != 0 and len(subset)>3:
                 subset = subset[:-(len(subset)%3)]
         else:
             subset = []
@@ -64,7 +64,7 @@ def recommendations():
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['varietal'].values[0])
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['origin'].values[0])
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['price'].values[0])
-    selected_wine_att.append(df[df['name']==selected_wine[:-4]]['kmeans_label'].values[0])
+    selected_wine_att.append(df[df['name']==selected_wine[:-4]]['kmeans_label'].values[0]+1)
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['description'].values[0])
     wines = get_wines(selected_wine[:-4])
     # print(wines)
@@ -76,7 +76,7 @@ def recommendations():
         lst.append(df[df['name']==wine]['price'].values[0])
         lst.append(df[df['name']==wine]['varietal'].values[0])
         lst.append(df[df['name']==wine]['origin'].values[0])
-        lst.append(df[df['name']==wine]['kmeans_label'].values[0])        
+        lst.append(df[df['name']==wine]['kmeans_label'].values[0]+1)        
         lst.append(df[df['name']==wine]['description'].values[0])
         items.append(lst)
     return render_template('recommendations.html',img_name = selected_wine, selected_wine_att = selected_wine_att, recs = items)
@@ -84,14 +84,21 @@ def recommendations():
 @app.route('/get_varietal')
 def get_varietal():
     origin = request.args.get('origin')
-
     sub_df = df[df['origin'] == origin]
     varietal = sub_df['varietal'].unique()
-    print(varietal)
     varietal = ['Select a varietal'] + sorted(varietal)
-    print (varietal)
     data = [{'id':i} for i in varietal]
-    print(data)
+    return jsonify(data)
+
+@app.route('/get_prices')
+def get_prices():
+    origin = request.args.get('origin')
+    varietal = request.args.get('varietal')
+    sub_df = df[(df['origin']==origin) & (df['varietal']==varietal)]
+    prices = sub_df['price_bins'].unique()
+    alphabet = "<251"
+    prices = ['Select a price range'] + sorted(prices, key=lambda word: [alphabet.index(c) for c in word[0]])
+    data = [{'id':i} for i in prices]
     return jsonify(data)
 
 
