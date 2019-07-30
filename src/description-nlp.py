@@ -116,7 +116,8 @@ if __name__ == '__main__':
     'cover','slowly','bay','leap','1er','original','north','translate',
     'western','definitely','label','jump','able','winery','del','farming',
     'story','couple','unmistakable','bear','trademark','depend','good',
-    'blend','lee','use','day','harvest','locate','source','farm']
+    'blend','lee','use','day','harvest','locate','source','farm','sonoma',
+    'willamette','pairs']
     nlp = NLP(arr)
     # nlp.lemmatizer()
     nlp.count_vectorizer(custom_stop_words)
