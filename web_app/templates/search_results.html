@@ -58,14 +58,23 @@
         <h2>Search Results</h2>
         <a href="/">Return to Search Page</a>
         {% if image_list %}
-        <table align="center" >
-          {%- for row in image_list|batch(3, '&nbsp;') %}
-            <tr>
-            {%- for column in row %}
-            <td><a href="{{url_for('recommendations', type=column)}}"> <img src="{{ url_for('download_file', filename=column) }}"></a></td> 
-            {%- endfor %}
-            </tr>
-          {%- endfor %}
+          {% if image_list|length < 3 %}
+          <table align="center" >
+              {%- for img in image_list %}
+                <tr>
+                <td><a href="{{url_for('recommendations', type=img)}}"> <img src="{{ url_for('download_file', filename=img) }}"></a></td> 
+                </tr>
+              {%- endfor %}
+          {% else %}
+            <table align="center" >
+              {%- for row in image_list|batch(3, '&nbsp;') %}
+                <tr>
+                {%- for column in row %}
+                <td><a href="{{url_for('recommendations', type=column)}}"> <img src="{{ url_for('download_file', filename=column) }}"></a></td> 
+                {%- endfor %}
+                </tr>
+              {%- endfor %}
+              {% endif %}
         {% else %}
           No results :(
         {% endif %}

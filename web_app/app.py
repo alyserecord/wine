@@ -67,7 +67,7 @@ def recommendations():
     selected_wine_att = []
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['varietal'].values[0])
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['origin'].values[0])
-    selected_wine_att.append(df[df['name']==selected_wine[:-4]]['price'].values[0])
+    selected_wine_att.append(format(df[df['name']==selected_wine[:-4]]['price'].values[0],'.2f'))
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['kmeans_label'].values[0]+1)
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['description'].values[0])
     wines = get_wines(selected_wine[:-4])
