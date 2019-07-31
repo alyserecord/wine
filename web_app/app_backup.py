@@ -24,10 +24,7 @@ def search_results():
         print(selected_varietal)
         selected_price = request.form.get('price')
         # df = pd.read_csv('../data/64x64/sorted_df.csv')
-        if selected_varietal == 'Select a varietal (optional)':
-            selected = df[(df['origin']==selected_origin) & (df['price_bins']==selected_price)]
-        else:
-            selected = df[(df['origin']==selected_origin) & (df['varietal']==selected_varietal) & (df['price_bins']==selected_price)]
+        selected = df[(df['origin']==selected_origin) & (df['varietal']==selected_varietal) & (df['price_bins']==selected_price)]
         try:
             subset = selected.sample(21)
         except:
@@ -77,7 +74,7 @@ def recommendations():
         lst = []
         lst.append('{}.jpg'.format(wine))
         lst.append(wine)
-        lst.append(format(df[df['name']==wine]['price'].values[0],'.2f'))
+        lst.append(df[df['name']==wine]['price'].values[0])
         lst.append(df[df['name']==wine]['varietal'].values[0])
         lst.append(df[df['name']==wine]['origin'].values[0])
         lst.append(df[df['name']==wine]['kmeans_label'].values[0]+1)        
@@ -88,33 +85,23 @@ def recommendations():
 @app.route('/get_varietal')
 def get_varietal():
     origin = request.args.get('origin')
-    price = request.args.get('price')
-    sub_df = df[(df['origin']==origin) & (df['price_bins']==price)]
+    sub_df = df[df['origin'] == origin]
     varietal = sub_df['varietal'].unique()
-    varietal = sorted(varietal)
+    varietal = ['Select a varietal'] + sorted(varietal)
     data = [{'id':i} for i in varietal]
     return jsonify(data)
 
 @app.route('/get_prices')
 def get_prices():
     origin = request.args.get('origin')
-    sub_df = df[(df['origin']==origin)]
+    varietal = request.args.get('varietal')
+    sub_df = df[(df['origin']==origin) & (df['varietal']==varietal)]
     prices = sub_df['price_bins'].unique()
     alphabet = "<251"
-    prices = sorted(prices, key=lambda word: [alphabet.index(c) for c in word[0]])
+    prices = ['Select a price range'] + sorted(prices, key=lambda word: [alphabet.index(c) for c in word[0]])
     data = [{'id':i} for i in prices]
     return jsonify(data)
 
-@app.route('/about', methods=['GET'])
-def about():
-    about = "Wine Recommender was built by Alyse Record, a wine lover and data scientist. The data was scraped from Wine.com \
-        and contains features such as wine label, description, price, varietal and origin. Several unsupervised machine \
-        learning models were applied to extract features from the wine labels and descriptions for use in the recommender. \
-        The recommender uses cosine similiarity to find the wine that are most like the user's selection based on price,\
-        origin, label, description and varietal."
-    
-    
-    return render_template('about.html',para = about)
 
 
 if __name__ == '__main__':

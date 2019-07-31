@@ -35,37 +35,37 @@
         $(function() {
             var dropdown = {
                 origin: $('#select_origin'),
-                price: $('#select_price'),
+                varietal: $('#select_varietal')
             };
     
             // function to call app.py and update varietal dropdown
-            function updatePrice() {
+            function updateVarietal() {
                 var origin = dropdown.origin.val();
-                dropdown.price.attr('disabled', 'disabled');
+                dropdown.varietal.attr('disabled', 'disabled');
                 
                 console.log(origin);
                 if (origin.length) {
-                    dropdown.price.empty();
+                    dropdown.varietal.empty();
     
-                    $.getJSON("{{ url_for('get_prices') }}", {origin: origin}, function(data) {
+                    $.getJSON("{{ url_for('get_varietal') }}", {origin: origin}, function(data) {
                         console.log(data);
-                        dropdown.price.append('<option>Select a price range ($)*</option>').val(null)
+                        dropdown.varietal.append('<option>pretty please</option>').val(null)
                         data.forEach(function(item) {
-                            dropdown.price.append(
+                            dropdown.varietal.append(
                                 $('<option>', {
                                     value: item.id,
                                     text: item.id
                                 })
                             );
                         });
-                        dropdown.price.removeAttr('disabled');
+                        dropdown.varietal.removeAttr('disabled');
                     });
                 }
             }
     
             // event listener on origin dropdown change
             dropdown.origin.on('change', function() { 
-                updatePrice();
+                updateVarietal();
             });
     
         });  
@@ -78,35 +78,35 @@
                   varietal: $('#select_varietal'),
                   price: $('#select_price')
               };
+              console.log(varietal)
       
-              // function to call app.py and update varietal dropdown
-              function updateVarietal() {
+              // function to call app.py and update price dropdown
+              function updatePrice() {
                   var origin = dropdown.origin.val();
-                  var price = dropdown.price.val();
-                  dropdown.varietal.attr('disabled', 'disabled');
+                  var varietal = dropdown.varietal.val();
+                  dropdown.price.attr('disabled', 'disabled');
                   console.log(origin);
-                  console.log(price);
-                  if (price.length) {
-                      dropdown.varietal.empty();
-                      $.getJSON("{{ url_for('get_varietal') }}", {origin: origin, price: price}, function(data) {
+                  console.log(varietal);
+                  if (varietal.length) {
+                      dropdown.price.empty();
+                      $.getJSON("{{ url_for('get_prices') }}", {origin: origin, varietal: varietal}, function(data) {
                           console.log(data);
-                          dropdown.varietal.append('<option>Select a varietal (optional)</option>').val(null)
                           data.forEach(function(item) {
-                              dropdown.varietal.append(
+                              dropdown.price.append(
                                   $('<option>', {
                                       value: item.id,
                                       text: item.id
                                   })
                               );
                           });
-                          dropdown.varietal.removeAttr('disabled');
+                          dropdown.price.removeAttr('disabled');
                       });
                   }
               }
       
-              // event listener on  dropdown change
-              dropdown.price.on('change', function() { 
-                  updateVarietal();
+              // event listener on varietal dropdown change
+              dropdown.varietal.on('change', function() { 
+                  updatePrice();
               });
       
           });  
@@ -135,7 +135,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="/">Search</a></li>
-            <li><a href="/about">About</a></li>
+            <li><a href="#about">About</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -157,13 +157,14 @@
         </select>
         <br>
         <br>
-        <select name="price" id = 'select_price' class="form-control" style="max-width: 350px;" disabled required>
-          <option selected="selected" value = ''>Select a price range ($)*</option>
+        <select name="varietal" id = 'select_varietal' class="form-control" style="max-width: 350px;" disabled required>
+            <option selected="selected" value = ''>Select a varietal (optional) </option>
+
         </select>
         <br>
         <br>
-        <select name="varietal" id = 'select_varietal' class="form-control" style="max-width: 350px;" disabled>
-            <option selected="selected" value = ''>Select a varietal (optional) </option>
+        <select name="price" id = 'select_price' class="form-control" style="max-width: 350px;" disabled required>
+          <option selected="selected" value = ''>Select a price range*</option>
         </select>
         <br>
         <br>
