@@ -17,7 +17,7 @@ The wine scraping script ran on an EC2 instance on AWS and all of the wine label
 ## Architecture
 A number of unsupervised models were used to create features that are utilized in the recommender. The raw label images were encoded and clustered, and the varietal and description text went through an NLP process and latent topics were identified. Those engineered features plus the wine price, origin (region), and type (red/white/sparkling) were used in the recommender. The end user would select a wine, and then receive recommendations based on their choice of wine.
 
-<img src="/figures/architecture.jpg" width="600">
+<img src="/figures/architecture.jpg" width="900">
 
 ## Image Processing
 
@@ -37,7 +37,7 @@ KMeans clustering was performed on the encoded wine label images to produce the 
 First, the description and varietal were concatenated together. This was done because there were almost 100 different varietals making it a very large categorical feature, and there was already great deal of overlap between the varietal and the description due to some descriptions listing the grape varietals.
 The text was lemmatized, numbers and special characters were removed, and custom stop words were removed. A TF-IDF matrix was procuded from the cleaned text, and a NMF was then used to extract latent topics form the vectorized descriptions and varietals.
 
-<img src="/figures/nlp_process.jpg" width="600">
+<img src="/figures/nlp_process.jpg" width="900">
 
 ### Example Latent Topics
 A total of 45 different latent topics were used in the final recommender to differential differnt varietals and flavos, but here are some example of the latent topics and the top few words in each topic:
