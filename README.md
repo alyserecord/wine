@@ -10,7 +10,7 @@ Do you pick your wine based on region? Price? Label? Varietal?
 There are so many wine options it seems everyone has their own way of selecting their next bottle of wine. My goal in this project was to take a bottle of wine that a person knows he/she likes, and provide them with recommendations of other wines they might like depending on a number of features.
 
 ## The Data
-I collected the data by webscaping the search pages of [wine.com](https://www.wine.com/list/wine/7155). On these pages I was able to get an image of the wine label, the varietal, the origin/region, a description of the wine, the type of wine, and the price.
+I collected the data by webscaping the search pages of [wine.com](https://www.wine.com/list/wine/7155). First, summary information such as name, label, price, origin and varietal was scraped from the wine.com search pages. Then, a second webscraper collected  the winemaker’s notes in a description field about each wine.
 
 The wine scraping script ran on an EC2 instance on AWS and all of the wine labels were collected and then stored on an S3 bucket. The script collected image labels, descriptions and metadata for about 12,200 wines.
 
