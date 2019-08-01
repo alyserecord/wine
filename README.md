@@ -17,14 +17,14 @@ The wine scraping script ran on an EC2 instance on AWS and all of the wine label
 ## Architecture
 A number of unsupervised models were used to create features that are utilized in the recommender. The raw label images were encoded and clustered, and the varietal and description text went through an NLP process and latent topics were identified. Those engineered features plus the wine price, origin (region), and type (red/white/sparkling) were used in the recommender. The end user would select a wine, and then receive recommendations based on their choice of wine.
 
-<img src="/figures/architecture.jpg" width="300">
+<img src="/figures/architecture.jpg" width="600">
 
 ## Image Processing
 
 A Convolutional Neural Network Autoencoder was used for dimension reduction on the wine label images. The input to the model was a 64x64x3 color image array, and the model produced a flattened 128 array before reconstructing the image. 
 The below figure depicts the architecture of the CNN Autoencoder. The encoded image layer was extracted for use in a clustering model.
 
-<img src="/figures/cnn-architecture.jpg" width="300">
+<img src="/figures/cnn-architecture.jpg" width="600">
 
 KMeans clustering was performed on the encoded wine label images to produce the following wine label clusters used in the content recommender. By using 7 clusters I found that each cluster had a distinctive color palette and style.
 
@@ -37,7 +37,7 @@ KMeans clustering was performed on the encoded wine label images to produce the 
 First, the description and varietal were concatenated together. This was done because there were almost 100 different varietals making it a very large categorical feature, and there was already great deal of overlap between the varietal and the description due to some descriptions listing the grape varietals.
 The text was lemmatized, numbers and special characters were removed, and custom stop words were removed. A TF-IDF matrix was procuded from the cleaned text, and a NMF was then used to extract latent topics form the vectorized descriptions and varietals.
 
-<img src="/figures/nlp_process.jpg" width="300">
+<img src="/figures/nlp_process.jpg" width="600">
 
 ### Example Latent Topics
 A total of 45 different latent topics were used in the final recommender to differential differnt varietals and flavos, but here are some example of the latent topics and the top few words in each topic:
