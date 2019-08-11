@@ -3,13 +3,14 @@
 
 from flask import Flask, render_template,request, send_from_directory,jsonify
 import pandas as pd
+import numpy as np
 import os
 app = Flask(__name__)
-import sys
-sys.path.insert(0, '../src')
-from recommender import CosineSimilarity
+# import sys
+# sys.path.insert(0, '../src')
+# from recommender import CosineSimilarity
 
-df = pd.read_csv('../data/64x64/sorted_df.csv')
+df = pd.read_csv('data/sorted_df.csv')
 
 # home page
 @app.route('/', methods=['GET','POST'])
@@ -48,16 +49,24 @@ MEDIA_FOLDER = '../images/'
 def download_file(filename):
     return send_from_directory(MEDIA_FOLDER, filename)
 
-def get_wines(selected_wine):
-    nmf_topics = pd.read_csv('../data/64x64/nmf_topics.csv')    
+def get_wines(selected_wine,num_rec):
+    # commenting the following block out because it regenerated
+    # the cosine simarilty matrix each time and was memory intensive
+    # nmf_topics = pd.read_csv('../data/64x64/nmf_topics.csv')    
+    # cs = CosineSimilarity(df,nmf_topics)
+    # cs.prep_sorted_data()
+    # cs.scale_nmf_clusters()
+    # cs.merge_files()
+    # cs.generate_matrix()
+    # return cs.get_recommendation(selected_wine,20)  
 
-    cs = CosineSimilarity(df,nmf_topics)
-    cs.prep_sorted_data()
-    cs.scale_nmf_clusters()
-    cs.merge_files()
-    cs.generate_matrix()
-
-    return cs.get_recommendation(selected_wine,20)  
+    similarity_matrix = np.load('../web_app/data/similarity_matrix.npy')
+    wine_index = df.name[df.name == selected_wine].index[0]
+    similar_indices = similarity_matrix[wine_index].argsort()[-2:-num_rec-2:-1]
+    items = []
+    for i in similar_indices:
+        items.append(df.name[i])
+    return items
 
 
 @app.route('/recomendations', methods=['GET','POST'])
@@ -70,7 +79,7 @@ def recommendations():
     selected_wine_att.append(format(df[df['name']==selected_wine[:-4]]['price'].values[0],'.2f'))
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['kmeans_label'].values[0]+1)
     selected_wine_att.append(df[df['name']==selected_wine[:-4]]['description'].values[0])
-    wines = get_wines(selected_wine[:-4])
+    wines = get_wines(selected_wine[:-4],21)
     # print(wines)
     items = []
     for wine in wines:
@@ -118,4 +127,4 @@ def about():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, threaded=True, debug=False)
+    app.run(host='0.0.0.0', port=8105, threaded=True, debug=False)
