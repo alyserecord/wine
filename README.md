@@ -31,6 +31,7 @@ KMeans clustering was performed on the encoded wine label images to produce the 
 <img src="/figures/cnn_cluster1.jpg" width="300"><img src="/figures/cnn_cluster2.jpg" width="300">
 <img src="/figures/cnn_cluster3.jpg" width="300"><img src="/figures/cnn_cluster4.jpg" width="300">
 <img src="/figures/cnn_cluster5.jpg" width="300"><img src="/figures/cnn_cluster6.jpg" width="300">
+<img src="/figures/cnn_cluster7.jpg" width="300">
 
 ## Text Processing
 
@@ -40,7 +41,7 @@ The text was lemmatized, numbers and special characters were removed, and custom
 <img src="/figures/nlp_process.jpg" width="900">
 
 ### Example Latent Topics
-A total of 45 different latent topics were used in the final recommender to differential differnt varietals and flavos, but here are some example of the latent topics and the top few words in each topic:
+A total of 45 different latent topics were used in the final recommender to differential differnt varietals and flavors, but here are some example of the latent topics and the top few words in each topic:
 
 **Buttery & Smooth Topic:** chardonnay, pear, apple vanilla, creamy, butter, hazelnut, pineapple, golden
 
