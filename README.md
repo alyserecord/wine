@@ -3,6 +3,7 @@
 ## Project Objective
 Do you pick your wine based on region? Price? Label? Varietal? 
 
+<p align="center">
 <img src="/figures/wine-labels.jpg" width="500">
 
 <sup>*Image from The Daily Meal in [Psychology of a Wine Label: Why We Buy the Bottles We Do](https://www.thedailymeal.com/psychology-wine-label-why-we-buy-bottles-we-do)*</sup>
