@@ -40,7 +40,8 @@ KMeans clustering was performed on the encoded wine label images to produce the 
 ## Text Processing
 
 First, the description and varietal were concatenated together. This was done because there were almost 100 different varietals making it a very large categorical feature, and there was already great deal of overlap between the varietal and the description due to some descriptions listing the grape varietals.
-The text was lemmatized, numbers and special characters were removed, and custom stop words were removed. A TF-IDF matrix was procuded from the cleaned text, and a NMF was then used to extract latent topics form the vectorized descriptions and varietals.
+
+The text was lemmatized, numbers and special characters were removed, and custom stop words were removed. A Term Frequency - Inverse Document Frequency (TF-IDF) matrix was procuded from the cleaned text in order to weight how important individual words were in each wine description. Then Non-Negavtive Matrix Factorization (NMF) was then used to extract latent topics form the vectorized descriptions and varietals.
 
 <p align="center">
 <img src="/figures/nlp_process.jpg" width="900">
@@ -59,11 +60,15 @@ A total of 45 different latent topics were used in the final recommender to diff
 ## The Recommender
 
 Finally, all features were combined and weighted in a content recommender that uses the cosine similarity to find wines similar to the user’s selection.
+
 The final features for the recommender include:
-Image Cluster
-Latent Topic Loadings
-Price
-Origin
-Type (Red, White or Sparkling)
+* Image Cluster
+* Latent Topic Loadings
+* Price
+* Origin
+* Type (Red, White or Sparkling)
 
 The recommender was deployed on an AWS EC2 instance where users can interact with the recommender searching for their favorite wines and receiving recommendations.
+
+<p align="center">
+<img src="/figures/wine_home.jpg" width="600">
