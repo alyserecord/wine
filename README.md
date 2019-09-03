@@ -57,7 +57,7 @@ A total of 45 different latent topics were used in the final recommender to diff
 
 **Refreshing Summer Wine Topic:** lemon, citrus, bright, acidity, green apple, fresh, lime, blossom, crisp
 
-## The Recommender
+## [The Recommender](http://ec2-13-58-74-223.us-east-2.compute.amazonaws.com:8105/)
 
 Finally, all features were combined and weighted in a content recommender that uses the cosine similarity to find wines similar to the user’s selection.
 
@@ -68,7 +68,7 @@ The final features for the recommender include:
 * Origin
 * Type (Red, White or Sparkling)
 
-The recommender was deployed on an AWS EC2 instance where users can interact with the recommender searching for their favorite wines and receiving recommendations.
+The recommender was deployed on an AWS EC2 instance where users can interact with the recommender searching for their favorite wines and receiving recommendations. The recommender can be accessed [here](http://ec2-13-58-74-223.us-east-2.compute.amazonaws.com:8105/)
 
 <p align="center">
-<img src="/figures/wine_home.jpg" width="600">
+<img src="/figures/wine_home.png" width="600">
