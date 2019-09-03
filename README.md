@@ -68,7 +68,7 @@ The final features for the recommender include:
 * Origin
 * Type (Red, White or Sparkling)
 
-The recommender was deployed on an AWS EC2 instance where users can interact with the recommender searching for their favorite wines and receiving recommendations. The recommender can be accessed [here](http://ec2-13-58-74-223.us-east-2.compute.amazonaws.com:8105/)
+The recommender was deployed on an AWS EC2 instance where users can interact with the recommender searching for their favorite wines and receiving recommendations. The recommender can be accessed [here](http://ec2-13-58-74-223.us-east-2.compute.amazonaws.com:8105/).
 
 <p align="center">
 <img src="/figures/wine_home.png" width="900">
