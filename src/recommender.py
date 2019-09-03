@@ -6,11 +6,27 @@ from sklearn.metrics.pairwise import cosine_similarity
 class CosineSimilarity():
 
     def __init__(self,df,nmf_topics):
+        '''
+        Initializes the wine metadata df, NMF topics from description, and an array of the wine names.
+
+        inputs:
+        df: dataframe of wine metadata
+        nmf_topics: W matrix of the NMF performed on the wine description + varietal
+
+        outputs: none
+        '''
         self.df = df
         self.nmf_topics = nmf_topics
         self.names = self.df['name']
 
     def prep_sorted_data(self):
+        '''
+        Using the initialized dataframe of wine metadata, the function removes unneed features,
+        turns text features into numbers, and weights features.
+
+        inputs: none
+        outputs: none
+        '''
         self.df = self.df[['origin','price','red','white','sparking','kmeans_label']]
         self.df = pd.concat([self.df,pd.get_dummies(self.df['origin'], prefix='origin').mul(2)],axis=1)
         self.df.drop(['origin'],axis=1,inplace=True)
@@ -20,16 +36,46 @@ class CosineSimilarity():
         self.df[['red','white','sparking']] = self.df[['red','white','sparking']] * 4
 
     def scale_nmf_clusters(self):
+        '''
+        Using the initialized NMF topics weights the features so that they impact the cosine similiarity
+        calcuation more.
+
+        inputs: none
+        outputs: none
+        '''
         self.nmf_topics = self.nmf_topics * 20
 
 
     def merge_files(self):
+        '''
+        Merges the dataframe of wine metadata and the NMF topics.
+
+        inputs: none
+        outputs: none
+        '''
         self.merged = pd.concat([self.df,self.nmf_topics],axis=1)
 
     def generate_matrix(self):
+        '''
+        Generates the similary matrix using the cosine similiary metric.
+
+        inputs: none
+        outputs: none
+        '''
+
         self.similarity_matrix = cosine_similarity(self.merged)
 
     def get_recommendation(self,wine_name,num_rec=5):
+        '''
+        Given a wine name, the function will return recommendations similar to the provided wine.
+
+        inputs: 
+        wine name: name of wine the user selected for recommendations
+        num_rec: the number of recommendations the function should return (default = 5)
+
+        outputs: 
+        list of wine recommenations
+        '''
         wine_index = self.names[self.names == wine_name].index[0]
         similar_indices = self.similarity_matrix[wine_index].argsort()[-2:-num_rec-2:-1]
         items = []
