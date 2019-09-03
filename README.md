@@ -41,7 +41,7 @@ KMeans clustering was performed on the encoded wine label images to produce the 
 
 First, the description and varietal were concatenated together. This was done because there were almost 100 different varietals making it a very large categorical feature, and there was already great deal of overlap between the varietal and the description due to some descriptions listing the grape varietals.
 
-The text was lemmatized, numbers and special characters were removed, and custom stop words were removed. A Term Frequency - Inverse Document Frequency (TF-IDF) matrix was procuded from the cleaned text in order to weight how important individual words were in each wine description. Then Non-Negavtive Matrix Factorization (NMF) was then used to extract latent topics form the vectorized descriptions and varietals.
+The text was lemmatized, numbers and special characters were removed, and custom stop words were removed. A Term Frequency - Inverse Document Frequency (TF-IDF) matrix was procuded from the cleaned text in order to weight how important individual words were in each wine description. Then Non-Negavtive Matrix Factorization (NMF) was used to extract latent topics form the vectorized descriptions and varietals.
 
 <p align="center">
 <img src="/figures/nlp_process.jpg" width="900">
