@@ -6,9 +6,9 @@ import pandas as pd
 import numpy as np
 import os
 app = Flask(__name__)
-# import sys
-# sys.path.insert(0, '../src')
-# from recommender import CosineSimilarity
+import sys
+sys.path.insert(0, '../src')
+from recommender import CosineSimilarity
 
 df = pd.read_csv('data/sorted_df.csv')
 
