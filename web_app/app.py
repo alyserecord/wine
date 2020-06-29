@@ -50,8 +50,8 @@ def download_file(filename):
     return send_from_directory(MEDIA_FOLDER, filename)
 
 def get_wines(selected_wine,num_rec):
-    commenting the following block out because it regenerated
-    the cosine simarilty matrix each time and was memory intensive
+    # commenting the following block out because it regenerated
+    # the cosine simarilty matrix each time and was memory intensive
     nmf_topics = pd.read_csv('../data/64x64/nmf_topics.csv')    
     cs = CosineSimilarity(df,nmf_topics)
     cs.prep_sorted_data()
