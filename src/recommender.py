@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-
 class CosineSimilarity():
 
     def __init__(self,df,nmf_topics):
@@ -55,16 +54,7 @@ class CosineSimilarity():
         '''
         self.merged = pd.concat([self.df,self.nmf_topics],axis=1)
 
-    def generate_matrix(self):
-        '''
-        Generates the similary matrix using the cosine similiary metric.
-
-        inputs: none
-        outputs: none
-        '''
-
-        self.similarity_matrix = cosine_similarity(self.merged)
-
+    
     def get_recommendation(self,wine_name,num_rec=5):
         '''
         Given a wine name, the function will return recommendations similar to the provided wine.
@@ -77,11 +67,12 @@ class CosineSimilarity():
         list of wine recommenations
         '''
         wine_index = self.names[self.names == wine_name].index[0]
-        similar_indices = self.similarity_matrix[wine_index].argsort()[-2:-num_rec-2:-1]
+        similar_indices = cosine_similarity(self.merged.iloc[wine_index,:].values.reshape(1,-1),self.merged)[0,:].argsort()[-2:-num_rec-2:-1]
         items = []
         for i in similar_indices:
             items.append(self.names[i])
         return items
+
 
 if __name__ == '__main__':
     df = pd.read_csv('../data/64x64/sorted_df.csv')
@@ -90,7 +81,6 @@ if __name__ == '__main__':
     cs = CosineSimilarity(df,nmf_topics)
     cs.prep_sorted_data()
     cs.merge_files()
-    cs.generate_matrix()
 
     wine = 'Daniel & Julien Barraud Pouilly-Fuisse La Roche 2014'
     recommendations = cs.get_recommendation(wine,20)
