@@ -50,23 +50,23 @@ def download_file(filename):
     return send_from_directory(MEDIA_FOLDER, filename)
 
 def get_wines(selected_wine,num_rec):
-    # commenting the following block out because it regenerated
-    # the cosine simarilty matrix each time and was memory intensive
-    # nmf_topics = pd.read_csv('../data/64x64/nmf_topics.csv')    
-    # cs = CosineSimilarity(df,nmf_topics)
-    # cs.prep_sorted_data()
-    # cs.scale_nmf_clusters()
-    # cs.merge_files()
+    commenting the following block out because it regenerated
+    the cosine simarilty matrix each time and was memory intensive
+    nmf_topics = pd.read_csv('../data/64x64/nmf_topics.csv')    
+    cs = CosineSimilarity(df,nmf_topics)
+    cs.prep_sorted_data()
+    cs.scale_nmf_clusters()
+    cs.merge_files()
     # cs.generate_matrix()
-    # return cs.get_recommendation(selected_wine,20)  
+    return cs.get_recommendation(selected_wine,20)  
 
-    similarity_matrix = np.load('../web_app/data/similarity_matrix.npy')
-    wine_index = df.name[df.name == selected_wine].index[0]
-    similar_indices = similarity_matrix[wine_index].argsort()[-2:-num_rec-2:-1]
-    items = []
-    for i in similar_indices:
-        items.append(df.name[i])
-    return items
+    # similarity_matrix = np.load('../web_app/data/similarity_matrix.npy')
+    # wine_index = df.name[df.name == selected_wine].index[0]
+    # similar_indices = similarity_matrix[wine_index].argsort()[-2:-num_rec-2:-1]
+    # items = []
+    # for i in similar_indices:
+    #     items.append(df.name[i])
+    # return items
 
 
 @app.route('/recomendations', methods=['GET','POST'])
